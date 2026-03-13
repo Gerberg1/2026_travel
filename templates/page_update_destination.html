@@ -1,0 +1,16 @@
+{% include "_header.html" %}
+<main>
+<section class="formContainer">
+<form mix-patch="/api-update-destination/{{ destination.destination_pk}}">
+        <input name="destination_name" type="text" value="{{ destination.destination_name }}" mix-validate="{{x.REGEX_DESTINATION_NAME}}">
+        <textarea name="destination_description" type="text" mix-validate="{{x.REGEX_DESTINATION_DESCRIPTION}}">{{ destination.destination_description }}</textarea>
+        <input name="destination_city" type="text" value="{{ destination.destination_city }}" mix-validate="{{x.REGEX_DESTINATION_CITY}}">
+        <input name="destination_country" type="text" value="{{ destination.destination_country }}" mix-validate="{{x.REGEX_DESTINATION_COUNTRY}}">
+        
+        <button class="submitButton">
+            Update
+        </button>
+    </form>
+</section>
+</main>
+{% include "_footer.html" %}

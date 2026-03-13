@@ -1,0 +1,27 @@
+{% include "_header.html" %}
+    <script src="/static/delete.js" defer></script>
+<main id="destinations">
+    {% if user%}
+    <a href="/create-destination">
+    <button class="createButton">Create a new destination</button>
+    </a>
+    {% endif %}
+            
+        {% for destination in destinations %}
+            {% include "___destination.html" %}
+
+            
+            
+        {% endfor %}
+
+        
+        
+        </div>
+    </section>
+
+</main>
+
+
+{% include "_footer.html" %}
+
+

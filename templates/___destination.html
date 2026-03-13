@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="/static/app.css">
+<div id="destination-{{ destination.destination_pk }}" class="destination" mix-fade-3000>  
+    <ul>
+        <ui><h2>{{destination.destination_name}}</h2></ui>
+        <br>
+            <ui>{{destination.destination_description}}</ui>
+            <br>
+                <ui><i>City/Region: </i>{{destination.destination_city}}</ui>
+                <br>
+                    <ui><i>Country: </i>{{destination.destination_country}}</ui>
+    </ul>
+    {% if user.user_pk == destination.user_pk%}
+        <a href="/update-destination/{{destination.destination_pk}}">
+             <button class="updateButton"> Update </button>
+             </a>
+             <a>
+             <button class="deleteButton" data-url="/api-delete-destination/{{ destination.destination_pk }}">Delete </button>
+             </a>
+              {% endif %}
+</div>

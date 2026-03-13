@@ -1,0 +1,21 @@
+{% include "_header.html" %}
+<main>
+<section class="formContainer">
+        <form mix-post="/api-create-destination">
+            <input name="destination_name" id="destination_name" type="text" placeholder="Destination name" mix-validate="{{x.REGEX_DESTINATION_NAME}}">
+            <textarea name="destination_description" id="destination_description" type="text" placeholder="Description" mix-validate="{{x.REGEX_DESTINATION_DESCRIPTION}}"></textarea>
+            <input name="destination_city" type="text" placeholder="City or region" mix-validate="{{x.REGEX_DESTINATION_CITY}}">
+            <input name="destination_country" type="text" placeholder="Country" mix-validate="{{x.REGEX_DESTINATION_COUNTRY}}">
+
+            <ul id="errors"></ul>
+
+            <button class="submitButton">
+                Create destinations
+            </button>
+        </form>
+</section>
+
+</main>
+
+
+{% include "_footer.html" %}
