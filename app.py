@@ -18,6 +18,7 @@ Session(app)
 def show_profile():
     try:
         user = session.get("user", "")
+        if not user: return redirect("/login")
         user_firstname = session["user"]["user_first_name"]
         user_lastname = session["user"]["user_last_name"]
         return render_template("page_profile.html", user=user, x=x, title=f"{user_firstname} {user_lastname}")
@@ -31,6 +32,7 @@ def show_profile():
 def show_signup():
     try:
         user = session.get("user", "")
+        if user: return redirect("/profile")
         return render_template("page_signup.html", user=user, x=x, title="Signup")
     except Exception as ex:
         ic(ex)
@@ -108,7 +110,7 @@ def create_user():
 def show_login():
     try:
         user = session.get("user", "")
-        if user: return redirect("/")
+        if user: return redirect("/profile")
         return render_template("page_login.html", user=user, x=x, title="Login")
         
     except Exception as ex:
