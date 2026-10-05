@@ -5,7 +5,10 @@ services:
       dockerfile: Dockerfile
     container_name: 2026_travel_flask
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
+    mem_limit: 256m
+    cpus: 0.50
     ports:
       - 80:80 # 0 - 1024 reserved. Use any port from 1025 to 65535
     volumes:
@@ -15,12 +18,20 @@ services:
     image: mariadb:10.6.20
     container_name: 2026_travel_mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: 2026_travel
+      MYSQL_USER: ${DB_USER}
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - mariadb_data:/var/lib/mysql
-    ports:
-      - 3306:3306
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    mem_limit: 256m
+    cpus: 0.50
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -29,12 +40,14 @@ services:
       - mariadb
     environment:
       PMA_HOST: mariadb
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: ${DB_USER}
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     ports:
       - 8080:80
+    mem_limit: 256m
+    cpus: 0.50
 
 volumes:
   mariadb_data:
-
-
-

@@ -13,6 +13,7 @@ app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
+
 @app.get("/profile")
 @x.no_cache
 def show_profile():

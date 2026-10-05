@@ -2,8 +2,15 @@ from flask import request, make_response
 import mysql.connector
 import re #Regular expressions - Regex
 from functools import wraps
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
 ##############################
+
 def no_cache(view):
     @wraps(view)
     def no_cache_view(*args, **kwargs):
@@ -19,9 +26,9 @@ def db():
     try:
         db = mysql.connector.connect(
             host = "mariadb",
-            user = "root",  
-            password = "password",
-            database = "2026_travel"
+            user = DB_USER,
+            password = DB_PASSWORD,
+            database = DB_NAME
         )
         cursor = db.cursor(dictionary=True)
         return db, cursor
