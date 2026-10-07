@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: 2026_travel_flask
+    networks: [app-network]
     depends_on:
       mariadb:
         condition: service_healthy
@@ -24,6 +25,7 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     volumes:
       - mariadb_data:/var/lib/mysql
+    networks: [app-network]
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -36,6 +38,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: 2026_travel_phpmyadmin
+    networks: [app-network]
     depends_on:
       - mariadb
     environment:
@@ -49,5 +52,9 @@ services:
     mem_limit: 256m
     cpus: 0.50
 
+
+networks:
+  app-network:
+    name: app-network
 volumes:
   mariadb_data:
