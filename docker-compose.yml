@@ -13,6 +13,7 @@ services:
       - 8000:8000 # 0 - 1024 reserved. Use any port from 1025 to 65535
     volumes:
       - .:/app
+      - flask_sessions:/app/flask_session
 
   mariadb:
     image: mariadb:10.6.20
@@ -51,3 +52,4 @@ services:
 
 volumes:
   mariadb_data:
+  flask_sessions:
