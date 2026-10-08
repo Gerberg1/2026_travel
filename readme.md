@@ -34,10 +34,10 @@ A Dockerized version of a previous travel application, using **Flask**, **MariaD
 
 5. All containers should now be running and accessible through `localhost` (127.0.0.1):
 
-   | Service | URL |
-   |---|---|
+   | Service                 | URL                     |
+   | ----------------------- | ----------------------- |
    | Web application (Flask) | <http://localhost:8000> |
-   | phpMyAdmin | <http://localhost:8080> |
+   | phpMyAdmin              | <http://localhost:8080> |
 
 6. Open phpMyAdmin in your browser (<http://localhost:8080>) and log in with the credentials you set in your `.env` file.
 7. In phpMyAdmin, import the `2026_travel.sql` file into the database. The app should now be ready.
@@ -52,15 +52,15 @@ This Docker project is based on a previous travel application, using Flask, Mari
 
 ## Running and stopping
 
-| Command | What it does |
-|---|---|
+| Command                     | What it does                                                                       |
+| --------------------------- | ---------------------------------------------------------------------------------- |
 | `docker compose up --build` | Builds the images from the Dockerfile and compose file, then starts the containers |
-| `docker compose up` | Starts the containers that are already built |
-| `docker compose up -d` | Same as above, but detached from the terminal |
-| `docker compose down` | Stops and removes your running containers |
-| `docker compose down -v` | Stops and removes your containers **and deletes the volumes (the database data)** |
-| `docker compose ps` | Shows the running containers |
-| `docker stats` | Shows the containers' resource consumption (RAM, CPU, etc.) |
+| `docker compose up`         | Starts the containers that are already built                                       |
+| `docker compose up -d`      | Same as above, but detached from the terminal                                      |
+| `docker compose down`       | Stops and removes your running containers                                          |
+| `docker compose down -v`    | Stops and removes your containers **and deletes the volumes (the database data)**  |
+| `docker compose ps`         | Shows the running containers                                                       |
+| `docker stats`              | Shows the containers' resource consumption (RAM, CPU, etc.)                        |
 
 ## Docker configuration
 
@@ -89,29 +89,28 @@ CMD ["flask", "run", "--host=0.0.0.0", "--port=8000", "--debug", "--reload"]
 
 This stage only exists to install the Python dependencies. It is not part of the final image.
 
-| Instruction | What it does |
-|---|---|
-| `FROM python:3.9-slim AS builder` | Starts from a small Python 3.9 base image from Docker Hub and names this stage `builder` so the next stage can copy from it |
-| `RUN python -m venv /opt/venv` | Creates a virtual environment at `/opt/venv` to hold all installed packages in one folder |
-| `ENV PATH="/opt/venv/bin:$PATH"` | Puts the venv first on the `PATH`, so `python` and `pip` refer to the venv versions |
-| `COPY requirements.txt .` | Copies only the requirements file (not the whole project). Docker caches this layer, so dependencies are only reinstalled when `requirements.txt` changes, not on every code change |
-| `RUN pip install --no-cache-dir -r requirements.txt` | Installs the dependencies into the venv. `--no-cache-dir` skips pip's download cache to keep the layer small |
+| Instruction                                          | What it does                                                                                                                                                                        |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FROM python:3.9-slim AS builder`                    | Starts from a small Python 3.9 base image from Docker Hub and names this stage `builder` so the next stage can copy from it                                                         |
+| `RUN python -m venv /opt/venv`                       | Creates a virtual environment at `/opt/venv` to hold all installed packages in one folder                                                                                           |
+| `ENV PATH="/opt/venv/bin:$PATH"`                     | Puts the venv first on the `PATH`, so `python` and `pip` refer to the venv versions                                                                                                 |
+| `COPY requirements.txt .`                            | Copies only the requirements file (not the whole project). Docker caches this layer, so dependencies are only reinstalled when `requirements.txt` changes, not on every code change |
+| `RUN pip install --no-cache-dir -r requirements.txt` | Installs the dependencies into the venv. `--no-cache-dir` skips pip's download cache to keep the layer small                                                                        |
 
 #### Stage 2: final image
 
 This stage starts from a fresh base image and only takes what it needs from the builder.
 
-| Instruction | What it does |
-|---|---|
-| `FROM python:3.9-slim` | Starts a clean image. Nothing from stage 1 is included unless it is explicitly copied |
-| `RUN useradd --uid 10001 --no-create-home appuser` | Creates an unprivileged user with a fixed UID (10001) and no home directory |
-| `COPY --from=builder /opt/venv /opt/venv` | Copies the finished venv, with all installed packages, from the builder stage |
-| `ENV PATH="/opt/venv/bin:$PATH"` | Sets the `PATH` again, because environment variables are not carried over between stages. This is what makes the `flask` command available |
-| `WORKDIR /app` | Sets the working directory for the following instructions and for the running container |
-| `COPY --chown=10001:10001 . .` | Copies the project files into `/app`, owned by the non-root user |
-| `USER 10001` | Switches to the non-root user. Everything after this line, including the running container, runs as `appuser` instead of root |
-| `CMD ["flask", "run", ...]` | The default command when the container starts. It runs the Flask development server on port 8000 |
-
+| Instruction                                        | What it does                                                                                                                               |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `FROM python:3.9-slim`                             | Starts a clean image. Nothing from stage 1 is included unless it is explicitly copied                                                      |
+| `RUN useradd --uid 10001 --no-create-home appuser` | Creates an unprivileged user with a fixed UID (10001) and no home directory                                                                |
+| `COPY --from=builder /opt/venv /opt/venv`          | Copies the finished venv, with all installed packages, from the builder stage                                                              |
+| `ENV PATH="/opt/venv/bin:$PATH"`                   | Sets the `PATH` again, because environment variables are not carried over between stages. This is what makes the `flask` command available |
+| `WORKDIR /app`                                     | Sets the working directory for the following instructions and for the running container                                                    |
+| `COPY --chown=10001:10001 . .`                     | Copies the project files into `/app`, owned by the non-root user                                                                           |
+| `USER 10001`                                       | Switches to the non-root user. Everything after this line, including the running container, runs as `appuser` instead of root              |
+| `CMD ["flask", "run", ...]`                        | The default command when the container starts. It runs the Flask development server on port 8000                                           |
 
 #### Multi-stage build
 
@@ -139,7 +138,8 @@ Also, because `docker-compose.yml` mounts the project folder over `/app` (`.:/ap
 
 ## Volumes and persistence
 
-- `mariadb_data` is the only named volume, so the database data persists through a shutdown.
+- `mariadb_data` is the named volume that makes sure the database data persists through a shutdown.
+- `flask_sessions`is the named volume used to perserve server-side Flask data(such as logins) so the system can remember an authenticated user
 - `volumes: - .:/app` mounts the project folder into the web container, so changes (for example in the code) are visible immediately without rebuilding the images.
 
 ## Networking
@@ -175,13 +175,13 @@ By leaving out MariaDB's `ports` in `docker-compose.yml`, its port is only reach
 
 ## Testing and verification
 
-| Command | What it shows |
-|---|---|
-| `docker compose config` | The resolved compose file, including the environment variables used and the port mappings |
-| `docker stats` | Live usage of the containers (RAM, CPU, block I/O). Try creating a new user in the application and watch the CPU usage go up on the DB container, or load the destinations |
-| `docker compose ps` | That everything is running, and that MariaDB is `healthy` |
-| `docker network inspect app-network` | The status of all containers attached to the network |
-| `docker compose logs --tail=50 web` | The last 50 log lines from the web container, useful for any errors after `docker compose up` |
+| Command                              | What it shows                                                                                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docker compose config`              | The resolved compose file, including the environment variables used and the port mappings                                                                                  |
+| `docker stats`                       | Live usage of the containers (RAM, CPU, block I/O). Try creating a new user in the application and watch the CPU usage go up on the DB container, or load the destinations |
+| `docker compose ps`                  | That everything is running, and that MariaDB is `healthy`                                                                                                                  |
+| `docker network inspect app-network` | The status of all containers attached to the network                                                                                                                       |
+| `docker compose logs --tail=50 web`  | The last 50 log lines from the web container, useful for any errors after `docker compose up`                                                                              |
 
 ## Limitations and next steps
 
