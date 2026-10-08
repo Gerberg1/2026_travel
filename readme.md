@@ -112,11 +112,6 @@ This stage starts from a fresh base image and only takes what it needs from the 
 | `USER 10001` | Switches to the non-root user. Everything after this line, including the running container, runs as `appuser` instead of root |
 | `CMD ["flask", "run", ...]` | The default command when the container starts. It runs the Flask development server on port 8000 |
 
-A few details about the `CMD`:
-
-- `--host=0.0.0.0` makes Flask listen on all network interfaces inside the container. With the default (`127.0.0.1`) it would be unreachable from outside the container, including from the host through the published port.
-- `--port=8000` matches the `8000:8000` port mapping in `docker-compose.yml`. Non-root users cannot bind to ports below 1024, which is why the app uses 8000 instead of 80.
-- `--debug --reload` enables the debugger and automatic restarts when code changes. This is convenient for development, but should not be used in production (see [Limitations and next steps](#limitations-and-next-steps)).
 
 #### Multi-stage build
 
