@@ -11,7 +11,7 @@ services:
     mem_limit: 256m
     cpus: 0.50
     ports:
-      - 80:80 # 0 - 1024 reserved. Use any port from 1025 to 65535
+      - 8000:8000 # 0 - 1024 reserved. Use any port from 1025 to 65535
     volumes:
       - .:/app
 
